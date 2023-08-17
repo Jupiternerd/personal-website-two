@@ -9,7 +9,7 @@ export const metadata = {
     description: 'Yea Yea',
 }
 
-const CursorHandler = dynamic(() => import('./components/CursorHandler'), {
+const DynamicCursor = dynamic(() => import('./components/DynamicCursor'), {
     ssr: false // This will load the component client-side only
 });
 
@@ -18,7 +18,8 @@ export default function RootLayout({children}: { children: React.ReactNode}) {
     return(
         <html lang="en">
             <body>
-                <CursorHandler/>
+                
+                <DynamicCursor />
                 <NavMenu />
                 <div className="divider"></div>
                 {children}

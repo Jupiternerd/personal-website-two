@@ -18,22 +18,11 @@ body {
             rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
-body.clicking {
-    cursor: var(--custom-cursor-filled);
-}
-
-html {
-    cursor: var(--custom-cursor-open);
-}
-
 a {
     color: white;
     position: relative;
     text-decoration: none;
-}
-
-a:hover {
-    cursor: var(--custom-cursor-filled);
+    cursor: none
 }
 
 a::before {
@@ -67,4 +56,25 @@ a::after {
 
 a:hover::after {
     opacity: 1;
+}
+
+
+/* Custom Cursor */
+
+#customCursor {
+    width: 30px;
+    height: 30px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><text x="0" y="20" font-size="20" fill="white" transform="rotate(45 12 12)">◯</text></svg>');
+    position: absolute;
+    pointer-events: none;
+    /* Important so it doesn't interfere with click events */
+    z-index: 9999;
+    /* Keep it above other elements */
+    mix-blend-mode: difference;
+    /* This will invert the cursor color based on background */
+}
+
+/* Hide the default cursor */
+body {
+    cursor: none;
 }

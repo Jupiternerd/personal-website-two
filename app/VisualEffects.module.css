@@ -1,0 +1,47 @@
+.openUp {
+    animation: openUp 5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, transparent 50%, black 50%);
+    mask-size: 100% 200%;
+}
+
+@keyframes openUp {
+    0% {
+        mask-position: 0% 0%;
+    }
+
+    100% {
+        mask-position: 0% 100%;
+    }
+}
+
+.jumping {
+    animation: jump 0.5s ease-in-out;
+}
+
+@keyframes jump {
+    0% {
+        transform: translateY(0);
+    }
+
+    30% {
+        transform: translateY(-60px);
+    }
+
+    50% {
+        transform: translateY(0);
+    }
+
+    70% {
+        transform: translateY(-30px);
+    }
+
+    80% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
