@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { NotoFour } from "../utils/FontPresets"
-
 export default function NavMenu() {
     const Style = { margin: '0 25px' };
 
