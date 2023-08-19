@@ -5,6 +5,7 @@ export type VNNavigationScripts = "next" | "previous" | number | `novel:${number
 export interface VNNavigationInterface {
     text: string;
     script: VNNavigationScripts;
+    checks?: {[key: string]: string}
 }
 
 export interface EffectsInterface {

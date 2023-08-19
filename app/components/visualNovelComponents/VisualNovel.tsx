@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { UserInterface } from "../../utils/struct/user";
 import { CharacterInterface } from "../../utils/struct/character";
-import { NovelInterface, SlideInterfaceTypes, SlideInterfaces, VNNavigationScripts } from "../../utils/struct/novel";
+import { NovelInterface, SlideInterfaceTypes, VNNavigationScripts } from "../../utils/struct/novel";
 import Scene from "./Scene";
 import TextBox from "./TextBox";
 import Choicebox from "./Choices";
@@ -21,7 +21,6 @@ function getUserData(): UserInterface {
         const defaultUserData: UserInterface = {
             blacklisted: false,
             flags: {
-                "started": "true"
             },
             state: {
                 x: 0,
@@ -59,6 +58,13 @@ async function getCharacterData(id: number): Promise<CharacterInterface> {
         },
         body: JSON.stringify(getUserData())
     }).then(res => res.json()) as CharacterInterface;
+}
+
+export function compareChecks(checks: { [key: string]: string }, flags: { [key: string]: string }) {
+    for (const [key, value] of Object.entries(checks)) {
+        if (flags[key] !== value) return false;
+    }
+    return true;
 }
 
 function reloadNovelWeb() {
@@ -168,8 +174,12 @@ export default function VisualNovel() {
                 {textBox}
             </div>
             <div style={{ marginTop: "20px", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {slide.choices.map((choice, index) =>
-                    <Choicebox key = {index} text = {choice.text} script = {choice.script} invoker = {navigate} />
+                {slide.choices.map((choice, index) => {
+                    if (choice?.checks && user?.flags) {
+                        if (!compareChecks(choice.checks, user.flags)) return null;
+                    }
+                    return <Choicebox key={index} text={choice.text} script={choice.script} invoker={navigate} />
+                }
                 )}
             </div>
         </div>
