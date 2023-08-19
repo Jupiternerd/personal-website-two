@@ -40,7 +40,7 @@ export default class AssetPipeline {
                 if (asset) {
                     await KeyV.db.set(key, asset);
                 } else {
-                    throw new Error(`Asset ${id} not found!`);
+                    throw new Error(`Asset ${AssetEnums[assetEnum]} ${id} not found!`);
                 }
             } catch (error) {
                 throw error;

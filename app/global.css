@@ -2,13 +2,6 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
-
-    --custom-cursor-filled: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="0" y="20" font-size="20" fill="white" transform="rotate(45 12 12)">⬤</text></svg>') 15 15,
-        auto;
-    --custom-cursor-filled-inverted: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="0" y="20" font-size="20" fill="black" transform="rotate(45 12 12)">⬤</text></svg>') 15 15,
-        auto;
-    --custom-cursor-open: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="0" y="20" font-size="20" fill="white" transform="rotate(45 12 12)">◯</text></svg>') 15 15,
-        auto;
 }
 
 body {
@@ -78,6 +71,24 @@ a:hover::after {
     /* Keep it above other elements */
     mix-blend-mode: difference;
     /* This will invert the cursor color based on background */
+}
+
+/* Media */
+
+/* Larger screen sizes */
+@media (min-width: 1024px) {
+    .scene {
+        width: 70vw;
+        height: 50vh;
+    }
+}
+
+/* Smaller screen sizes */
+@media (max-width: 768px) {
+    .scene {
+        width: 90vw;
+        height: 70vh;
+    }
 }
 
 

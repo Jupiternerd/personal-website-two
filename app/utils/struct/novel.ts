@@ -12,8 +12,8 @@ export interface EffectsInterface {
 }
 
 export enum SlideInterfaceTypes {
-    "single",
-    "bg"
+    "bg",
+    "single"
 }
 
 export interface BaseSlideInterface {
@@ -52,3 +52,33 @@ export interface NovelInterface {
     slides: SlideInterfaces[],
     checks?: {[key: string]: string} 
 }
+
+const defaultNovel: NovelInterface = {
+    "_id": 0,
+    "slides": [
+        {
+            "type": 0,
+            "index": 0,
+            "background": {
+                "source": "/bgs/bg_1_final.webm",
+                "type": "video",
+            },
+            "choices": [{
+                "text": "Begin",
+                "script": "next"
+            }]
+         },
+        {
+            "type": 0,
+            "index": 0,
+            "background": {
+                "source": "/bgs/bg_3_final.webm",
+                "type": "video",
+            },
+            "choices": [{
+                "text": "Go back",
+                "script": "previous"
+            }]
+        }
+        ]
+    }   
