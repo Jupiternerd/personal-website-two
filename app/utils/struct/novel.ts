@@ -1,7 +1,7 @@
 import { MoodsEnum } from "./character";
 import { MotionEffectsEnum } from "./visualEffects";
 
-export type VNNavigationScripts = "next" | "previous" | number;
+export type VNNavigationScripts = "next" | "previous" | number | `novel:${number}`;
 export interface VNNavigationInterface {
     text: string;
     script: VNNavigationScripts;
@@ -20,7 +20,7 @@ export interface BaseSlideInterface {
     type: SlideInterfaceTypes,
     index: number,
     background: {
-        file: string,
+        source: string,
         type: "image" | "video"
     },
     choices: VNNavigationInterface[]
@@ -33,7 +33,7 @@ export interface BgSlideInterface extends BaseSlideInterface{
 export interface SingleCharacterSlide extends BaseSlideInterface {
     type: SlideInterfaceTypes.single,
     character: {
-        id: string,
+        id: number,
         mood: MoodsEnum
     },
     effects?: {

@@ -10,6 +10,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } = req;
 
     try {
+        if (id === "default") {
+            
+        }
         let novel = await AssetPipeline.getAssets(AssetEnums.novel, parseInt(id as string));
         if (!novel) {
             return res.status(404).send('Novel not found for id: ' + parseInt(id as string));

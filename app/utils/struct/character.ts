@@ -9,7 +9,7 @@ export interface CharacterInterface {
     _id: number,
     name: string,
     files: {[key in keyof typeof MoodsEnum]: {
-        file: string,
+        source: string,
         type: "image" | "video"
     }}
 }

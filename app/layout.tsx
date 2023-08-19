@@ -13,13 +13,12 @@ const DynamicCursor = dynamic(() => import('./components/DynamicCursor'), {
     ssr: false // This will load the component client-side only
 });
 
-
 export default function RootLayout({children}: { children: React.ReactNode}) {
 
     return(
         <html lang="en">
-            <DynamicCursor />
             <body>
+                <DynamicCursor />
                 <NavMenu />
                 {children}
                 <Footer />
