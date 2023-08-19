@@ -20,7 +20,9 @@ function getUserData(): UserInterface {
         // add in a default user data
         const defaultUserData: UserInterface = {
             blacklisted: false,
-            flags: [],
+            flags: {
+                "started": "true"
+            },
             state: {
                 x: 0,
                 y: 0
@@ -40,11 +42,23 @@ export function deleteUserData() {
 }
 
 async function getNovelData(id: number): Promise<NovelInterface> {
-    return await fetch(`/api/novels/${id}`).then(res => res.json()) as NovelInterface;
+    return await fetch(`/api/novels/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(getUserData())
+    }).then(res => res.json()) as NovelInterface;
 }
 
 async function getCharacterData(id: number): Promise<CharacterInterface> {
-    return await fetch(`/api/characters/${id}`).then(res => res.json()) as CharacterInterface;
+    return await fetch(`/api/characters/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(getUserData())
+    }).then(res => res.json()) as CharacterInterface;
 }
 
 function reloadNovelWeb() {

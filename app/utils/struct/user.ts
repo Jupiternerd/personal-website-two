@@ -5,6 +5,6 @@ export interface UserInterface {
         x: number,
         y: number,
     },
-    flags: string[],
+    flags: {[key: string]: string},
     blacklisted: boolean
 }
