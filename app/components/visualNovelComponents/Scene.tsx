@@ -23,13 +23,15 @@ const Scene: React.FC<SceneProps> = ({ backgroundImage, characterImage }) => {
     return (
         <div style={{
             display: 'flex',
+            position: 'relative',
             justifyContent: 'center',
             alignItems: 'center',
+            width: "80vw",
             height: '60vh',
             marginTop: '20px'
         }}>
-            {backgroundLayer}
             {characterLayer}
+            {backgroundLayer}
         </div>
     )
 }

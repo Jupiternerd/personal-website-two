@@ -95,15 +95,19 @@ export default function VisualNovel() {
     useEffect(() => {
         try {
             setUser(getUserData());
-        } catch (e) {
-            reloadNovelWeb();
-        }
-        try {
             loadNovelData();
         } catch (e) {
             reloadNovelWeb();
         }
     }, []);
+
+    /*
+    useEffect(() => {
+        if (user) {
+            loadNovelData();
+        }
+    }, [user?.state.x, user?.state.y]);
+    */
 
     if (!preloadedData) {
         return <div style={{
@@ -121,7 +125,7 @@ export default function VisualNovel() {
     scene = <Scene backgroundImage={slide.background}/>;
 
     if (slide.type === SlideInterfaceTypes.single) {
-        scene = <Scene backgroundImage={slide.background} characterImage={preloadedData?.character?.files[slide.character.mood]} />
+        scene = <Scene key={slide.background.source} backgroundImage={slide.background} characterImage={preloadedData?.character?.files[slide.character.mood]} />
         textBox = <TextBox text={slide.speaker.text} name={preloadedData.character?.name ?? "???"} />
     }
 
@@ -130,6 +134,7 @@ export default function VisualNovel() {
         const DATA = { ...user, state: { x, y } }
         setUserData(DATA);
         setUser(DATA)
+        loadNovelData(x, y);
     }
 
     const navigate = (script: VNNavigationScripts) => {
@@ -170,7 +175,7 @@ export default function VisualNovel() {
             alignItems: 'center'
         }}>
             <div style={{ width: '80vw', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {/*scene*/}
+                {scene}
                 {textBox}
             </div>
             <div style={{ marginTop: "20px", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
