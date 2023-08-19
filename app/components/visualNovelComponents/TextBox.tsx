@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Style from "./TextBox.module.css"
 
 interface TextboxProps {
     name: string;
@@ -36,7 +37,7 @@ const TextBox: React.FC<TextboxProps> = ({ name, text }) => {
     }, []);
 
     return (
-        <div style={{ zIndex: 0, width: '50vw', backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '10px', color: 'white', borderRadius: '5px', marginTop: '20px' }}>
+        <div className={ Style.textBox }>
             <h1 style={{ fontSize: '30px' }}><u>{name}</u></h1>
             <p style={{ fontSize: '25px', marginTop: '10px', textAlign: "left" }}>
                 {`\"${currentText}\"`}
