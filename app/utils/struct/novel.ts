@@ -70,8 +70,15 @@ const defaultNovel: NovelInterface = {
             }]
          },
         {
-            "type": 0,
+            "type": 1,
             "index": 0,
+            "character": {
+                "id": 0,
+                "mood": 0
+            },
+            "speaker": {
+                "text": "Hello, world!"
+            },
             "background": {
                 "source": "/bgs/bg_3_final.webm",
                 "type": "video",
