@@ -4,8 +4,10 @@
 import { useEffect, useState } from "react";
 import { UserInterface } from "../../utils/struct/user";
 import { CharacterInterface } from "../../utils/struct/character";
-import { NovelInterface, SlideInterfaceTypes, SlideInterfaces } from "../../utils/struct/novel";
+import { NovelInterface, SlideInterfaceTypes, SlideInterfaces, VNNavigationScripts } from "../../utils/struct/novel";
 import Scene from "./Scene";
+import TextBox from "./TextBox";
+import Choicebox from "./Choices";
 
 function getUserData(): UserInterface {
     try {
@@ -29,7 +31,11 @@ function getUserData(): UserInterface {
     }
 }
 
-function deleteUserData() {
+function setUserData(userData: UserInterface) {
+    localStorage.setItem("userData", JSON.stringify(userData));
+}
+
+export function deleteUserData() {
     localStorage.removeItem("userData");
 }
 
@@ -81,16 +87,59 @@ export default function VisualNovel() {
     }, []);
 
     if (!preloadedData) {
-        return <div>Loading...</div>;
+        return <div style={{
+            paddingTop: '20vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>Loading...</div>;
     }
 
 
     let slide = preloadedData.novel.slides[user?.state.y ?? 0],
+    textBox: JSX.Element | null = null,
     scene = <Scene backgroundImage={slide.background}/>;
 
     if (slide.type === SlideInterfaceTypes.single) {
-        let character: { source: string, type: "video" | "image" } | undefined = preloadedData.character?.files[slide.character.mood]
-        scene = <Scene backgroundImage={slide.background} characterImage={character} />
+        scene = <Scene backgroundImage={slide.background} characterImage={preloadedData?.character?.files[slide.character.mood]} />
+        textBox = <TextBox text={slide.speaker.text} name={preloadedData.character?.name ?? "???"} />
+    }
+
+    function setAndStoreUserState(x: number, y: number) {
+        if (!user) return;
+        const DATA = { ...user, state: { x, y } }
+        setUserData(DATA);
+        setUser(DATA)
+    }
+
+    const navigate = (script: VNNavigationScripts) => {
+        if (!user) return;
+        // special novel script:
+        if (typeof script == 'string' && script.startsWith('novel')) {
+            const id = parseInt(script.split(':')[1]);
+            if (isNaN(id)) return;
+            setAndStoreUserState(id, 0);
+        }
+        switch (script) {
+            case 'next':
+                // check if there is a next slide
+                if (user.state.y + 1 < preloadedData.novel.slides.length) {
+                    setAndStoreUserState(user.state.x, user.state.y + 1);
+                }
+                break;
+            case 'previous':
+                // check if there is a previous slide
+                if (user.state.y - 1 >= 0) {
+                    setAndStoreUserState(user.state.x, user.state.y - 1);
+                }
+                break;
+            default:
+                if (typeof script === 'number' && script >= 0 && script < preloadedData.novel.slides.length) {
+                    setAndStoreUserState(user.state.x, script);
+                }
+                break;
+        }
     }
 
     return (
@@ -101,7 +150,13 @@ export default function VisualNovel() {
             alignItems: 'center'
         }}>
             <div style={{ width: '80vw', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {scene}
+                {/*scene*/}
+                {textBox}
+            </div>
+            <div style={{ marginTop: "20px", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {slide.choices.map((choice, index) =>
+                    <Choicebox key = {index} text = {choice.text} script = {choice.script} invoker = {navigate} />
+                )}
             </div>
         </div>
     )

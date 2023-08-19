@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { NotoFour } from '../../utils/FontPresets';
-import styles from "./Choicebox.module.css"
+import styles from "./ChoiceBox.module.css"
 import { VNNavigationInterface, VNNavigationScripts } from '../../utils/struct/novel';
 
 interface ChoiceboxProps extends VNNavigationInterface {
