@@ -89,4 +89,13 @@ a:hover::after {
         width: 90vw;
         height: 70vh;
     }
+
+    ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    li {
+        margin: 10px 0;
+    }
 }
