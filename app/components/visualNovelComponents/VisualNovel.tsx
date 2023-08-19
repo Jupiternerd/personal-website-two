@@ -75,26 +75,25 @@ export default function VisualNovel() {
     const [preloadedData, setPreloadedData] = useState<PreloadedData | null>(null);
     const [user, setUser] = useState<UserInterface | null>(null);
 
+    async function loadNovelData(novelId: number = user?.state?.x ?? 0, slideId: number = user?.state?.y ?? 0) {
+        let novelResponse = await getNovelData(novelId),
+            slide = novelResponse.slides.find(slide => slide.index === slideId);
+        let characterResponse: CharacterInterface | undefined
+            = (slide?.type === SlideInterfaceTypes.single ? await getCharacterData(slide.character.id)
+                : undefined);
+
+        // set the preloaded data
+        setPreloadedData({ character: characterResponse, novel: novelResponse });
+    }
+
     useEffect(() => {
         try {
             setUser(getUserData());
         } catch (e) {
             reloadNovelWeb();
         }
-
-        // get novel data
-        async function fetchData(novelId: number = user?.state?.x ?? 0, slideId: number = user?.state?.y ?? 0) {
-            let novelResponse = await getNovelData(novelId),
-                slide = novelResponse.slides.find(slide => slide.index === slideId);
-            let characterResponse: CharacterInterface | undefined
-                = (slide?.type === SlideInterfaceTypes.single ? await getCharacterData(slide.character.id)
-                    : undefined);
-
-            // set the preloaded data
-            setPreloadedData({ character: characterResponse, novel: novelResponse });
-        }
         try {
-            fetchData();
+            loadNovelData();
         } catch (e) {
             reloadNovelWeb();
         }
@@ -133,6 +132,7 @@ export default function VisualNovel() {
         if (typeof script == 'string' && script.startsWith('novel')) {
             const id = parseInt(script.split(':')[1]);
             if (isNaN(id)) return;
+            loadNovelData(id, 0);
             setAndStoreUserState(id, 0);
         }
         switch (script) {
