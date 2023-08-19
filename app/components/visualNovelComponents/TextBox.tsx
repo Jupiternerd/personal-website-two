@@ -38,9 +38,9 @@ const TextBox: React.FC<TextboxProps> = ({ name, text }) => {
 
     return (
         <div className={`${NotoFour.className} ${Style.textBox}`}>
-            <h1 style={{ fontSize: '30px' }}><u>{name}</u></h1>
-            <p style={{ fontSize: '25px', marginTop: '10px', textAlign: "left" }}>
-                {`\"${currentText}\"`}
+            <h1 style={{ fontSize: '30px', textAlign: "center" }}><u>{name}</u></h1>
+            <p style={{ fontSize: '25px', marginTop: '10px', textAlign: "center" }}>
+                {`${currentText}`}
                 <span style={{ visibility: cursorVisible ? 'visible' : 'hidden' }}>|</span>
             </p>
         </div>
