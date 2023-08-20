@@ -13,7 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         body
     } = req;
     const userData = body as PersistantUserInterface;
-
     try {
         if (!userData) return res.status(403).send('Bad request');
         if (userData.blacklisted) {
