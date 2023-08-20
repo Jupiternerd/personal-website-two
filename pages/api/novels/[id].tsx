@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { config } from 'dotenv';
 import AssetPipeline, { AssetEnums } from '../../../app/utils/assetPipeline/getAssets';
-import { UserInterface } from '../../../app/utils/struct/user';
+import { PersistantUserInterface } from '../../../app/utils/struct/user';
 import { NovelInterface } from '../../../app/utils/struct/novel';
 import { compareChecks } from "../../../app/components/visualNovelComponents/VisualNovel";
 
@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         query: { id },
         body
     } = req;
-    const userData = body as UserInterface;
+    const userData = body as PersistantUserInterface;
 
     try {
         if (!userData) return res.status(403).send('Bad request');

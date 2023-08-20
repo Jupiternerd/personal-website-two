@@ -15,6 +15,22 @@
     }
 }
 
+@keyframes expandScene {
+    0% {
+        width: 50vw;
+        height: 50vh;
+    }
+
+    100% {
+        width: 100vw;
+        height: 60vh
+    }
+}
+
+.expanding {
+    animation: expandScene 3s forwards;
+}
+
 .jumping {
     animation: jump 0.5s ease-in-out;
 }

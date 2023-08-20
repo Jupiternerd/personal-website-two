@@ -2,37 +2,54 @@
 
 "use client";
 import { useEffect, useState } from "react";
-import { UserInterface } from "../../utils/struct/user";
+import { UserDataInterface } from "../../utils/struct/user";
 import { CharacterInterface } from "../../utils/struct/character";
 import { NovelInterface, SlideInterfaceTypes, VNNavigationScripts } from "../../utils/struct/novel";
 import Scene from "./Scene";
 import TextBox from "./TextBox";
 import Choicebox from "./Choices";
 
-function getUserData(): UserInterface {
-    try {
-        const userData = localStorage.getItem("userData");
-        if (!userData) {
-            throw new Error("No user data");
-        }
-        return JSON.parse(userData);
-    } catch (error) {
-        // add in a default user data
-        const defaultUserData: UserInterface = {
+function getUserData(): UserDataInterface {
+    const defaultUserData: UserDataInterface = {
+        persistant: {
             blacklisted: false,
             flags: {
-            },
+            }
+        },
+        session: {
             state: {
                 x: 0,
                 y: 0
             }
+        }
+    };
+
+    try {
+        const persistant = localStorage.getItem("userData");
+        let session = sessionStorage.getItem("userData");
+
+        if (!persistant) throw new Error("No persistant user data");
+        if (!session) {
+            // set the session data to the default
+            session = JSON.stringify(defaultUserData.session);
+            // save to session
+            sessionStorage.setItem("userData", session);
+        }
+        return {
+            persistant: JSON.parse(persistant),
+            session: session ? JSON.parse(session) : defaultUserData.session
+        }
+    } catch (error) {
+        // add in a default user data
+        localStorage.setItem("userData", JSON.stringify(defaultUserData.persistant));
+        return {
+            persistant: defaultUserData.persistant,
+            session: defaultUserData.session
         };
-        localStorage.setItem("userData", JSON.stringify(defaultUserData));
-        return defaultUserData;
     }
 }
 
-function setUserData(userData: UserInterface) {
+function setUserData(userData: UserDataInterface) {
     localStorage.setItem("userData", JSON.stringify(userData));
 }
 
@@ -79,9 +96,11 @@ interface PreloadedData {
 
 export default function VisualNovel() {
     const [preloadedData, setPreloadedData] = useState<PreloadedData | null>(null);
-    const [user, setUser] = useState<UserInterface | null>(null);
+    const [user, setUser] = useState<UserDataInterface | null>(null);
+    const [playIntro, setPlayIntro] = useState(true);
+    const [isExpanding, setIsExpanding] = useState(false);
 
-    async function loadNovelData(novelId: number = user?.state?.x ?? 0, slideId: number = user?.state?.y ?? 0) {
+    async function loadNovelData(novelId: number = user?.session.state?.x ?? 0, slideId: number = user?.session.state?.y ?? 0) {
         let novelResponse = await getNovelData(novelId),
             slide = novelResponse.slides.find(slide => slide.index === slideId);
         let characterResponse: CharacterInterface | undefined
@@ -92,13 +111,36 @@ export default function VisualNovel() {
         setPreloadedData({ character: characterResponse, novel: novelResponse });
     }
 
+    function handleChoiceClick(script: VNNavigationScripts) {
+        setIsExpanding(true);
+
+        // After a delay equal to the animation duration, navigate
+        setTimeout(() => {
+            navigate(script);
+        }, 3000); // assuming the animation is 1s long
+    }
+
     useEffect(() => {
-        try {
-            setUser(getUserData());
-            loadNovelData();
-        } catch (e) {
-            reloadNovelWeb();
+        let timeoutId: NodeJS.Timeout;
+
+        const fetchDataAndSetupIntro = async () => {
+            try {
+                setUser(getUserData());
+                await loadNovelData();
+
+                // Once the data is loaded, set up the timeout for the intro
+                timeoutId = setTimeout(() => {
+                    setPlayIntro(false);
+                }, 8000); // 8 seconds
+            } catch (e) {
+                reloadNovelWeb();
+            }
         }
+
+        fetchDataAndSetupIntro();
+
+        // Clear timeout on unmount
+        return () => clearTimeout(timeoutId);
     }, []);
 
     if (!preloadedData) {
@@ -111,15 +153,26 @@ export default function VisualNovel() {
         }}>Loading...</div>;
     }
 
-
-    let slide = preloadedData.novel.slides[user?.state.y ?? 0],
-    textBox: JSX.Element | null = null,
-    scene = <Scene backgroundImage={slide.background}/>;
+    let slide = preloadedData.novel.slides[user?.session.state?.y ?? 0];
+    let characterImage: { source: string, type: "image" | "video" } | undefined = undefined;
+    let textBox: JSX.Element | null = null;
 
     if (slide.type === SlideInterfaceTypes.single) {
-        scene = <Scene key={slide.background.source} backgroundImage={slide.background} characterImage={preloadedData?.character?.files[slide.character.mood]} />
-        textBox = <TextBox text={slide.speaker.text} name={preloadedData.character?.name ?? "???"} />
+        characterImage = preloadedData?.character?.files[slide.character.mood];
+        textBox = <TextBox text={slide.speaker.text} name={preloadedData.character?.name ?? "???"} />;
     }
+
+    const sceneStyle = isExpanding ? { width: '100vw', transition: 'width 1s' } : { width: '50vw', transition: 'width 1s' };
+
+    const scene = (
+        <Scene
+            key={slide.background.source}
+            playIntro={playIntro}
+            backgroundImage={slide.background}
+            characterImage={characterImage}
+            style={sceneStyle}
+        />
+    );
 
     function setAndStoreUserState(x: number, y: number) {
         if (!user) return;
@@ -141,19 +194,19 @@ export default function VisualNovel() {
         switch (script) {
             case 'next':
                 // check if there is a next slide
-                if (user.state.y + 1 < preloadedData.novel.slides.length) {
-                    setAndStoreUserState(user.state.x, user.state.y + 1);
+                if (user?.session.state?.y + 1 < preloadedData.novel.slides.length) {
+                    setAndStoreUserState(user?.session.state?.x, user?.session.state?.y + 1);
                 }
                 break;
             case 'previous':
                 // check if there is a previous slide
-                if (user.state.y - 1 >= 0) {
-                    setAndStoreUserState(user.state.x, user.state.y - 1);
+                if (user?.session.state?.y - 1 >= 0) {
+                    setAndStoreUserState(user?.session.state?.x, user?.session.state?.y - 1);
                 }
                 break;
             default:
                 if (typeof script === 'number' && script >= 0 && script < preloadedData.novel.slides.length) {
-                    setAndStoreUserState(user.state.x, script);
+                    setAndStoreUserState(user?.session.state?.x, script);
                 }
                 break;
         }
@@ -172,12 +225,18 @@ export default function VisualNovel() {
             </div>
             <div style={{ marginTop: "20px", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {slide.choices.map((choice, index) => {
-                    if (choice?.checks && user?.flags) {
-                        if (!compareChecks(choice.checks, user.flags)) return null;
+                    if (choice?.checks && user?.persistant.flags) {
+                        if (!compareChecks(choice.checks, user.persistant.flags)) return null;
                     }
-                    return <Choicebox key={index} text={choice.text} script={choice.script} invoker={navigate} />
-                }
-                )}
+                    return (
+                        <Choicebox
+                            key={index}
+                            text={choice.text}
+                            script={choice.script}
+                            invoker={index === 0 ? handleChoiceClick : navigate}
+                        />
+                    );
+                })}
             </div>
         </div>
     )

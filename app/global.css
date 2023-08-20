@@ -13,8 +13,34 @@ body {
 
 body, html {
     overflow-x: hidden;
-    overflow-y: hidden;
     cursor: none;
+}
+
+
+
+/* The Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    background: transparent;
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+/* The Scrollbar Thumb */
+::-webkit-scrollbar-thumb {
+    background-color: #ffffff;
+    border-radius: 15;
+    width: 1px;
+    height: 15px;
+}
+
+/* Hover effect for the thumb */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #a6a6a6;
 }
 
 a {
@@ -78,7 +104,7 @@ a:hover::after {
 /* Larger screen sizes */
 @media (min-width: 1024px) {
     .scene {
-        width: 70vw;
+        width: 50vw;
         height: 50vh;
     }
 }
@@ -90,12 +116,18 @@ a:hover::after {
         height: 70vh;
     }
 
-    ul {
-        flex-direction: column;
-        align-items: center;
-    }
+        ul {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        ul li {
+            margin-bottom: 10px;
+        }
+    
+        ul li:last-child {
+            margin-bottom: 0;
+        }
 
-    li {
-        margin: 10px 0;
-    }
 }
