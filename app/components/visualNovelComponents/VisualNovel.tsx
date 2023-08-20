@@ -101,14 +101,6 @@ export default function VisualNovel() {
         }
     }, []);
 
-    /*
-    useEffect(() => {
-        if (user) {
-            loadNovelData();
-        }
-    }, [user?.state.x, user?.state.y]);
-    */
-
     if (!preloadedData) {
         return <div style={{
             paddingTop: '20vh',
