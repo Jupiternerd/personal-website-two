@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '100px',
+      padding: '40px',
       fontSize: '14px',
     }}>
       <p>&copy; {new Date().getFullYear()} Wai Hlaing // Shokkunn</p>
@@ -16,8 +16,9 @@ const Footer: React.FC = () => {
         <a href="https://github.com/Jupiternerd/personal-website-two" target="_blank" rel="noopener noreferrer" style={{ margin: '0 10px' }}>GitHub (source code)</a>
       </div>
       <div>
-        <p>
-          The website uses Cookies to keep track of user choices and data. By using this website, you agree to the use of Cookies.
+        <p style={{fontSize: '16px'}}>
+          ⚠ WARNING • 
+          Progress resets every refresh, reload or page change (about, projects, contact, etc.)
         </p>
       </div>
     </footer>
