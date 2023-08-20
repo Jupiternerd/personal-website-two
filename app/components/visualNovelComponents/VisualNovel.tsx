@@ -169,7 +169,7 @@ export default function VisualNovel() {
     const navigate = (script: VNNavigationScripts, set?: { [key: string]: string }) => {
         if (!user || !xy) return;
 
-        if (xy?.x === 0 && xy?.y === 1 && !expandHorizon) {
+        if (xy?.x === 0 && xy?.y === 0 && !expandHorizon) {
             setExpandHorizon(true);
         }
         if (typeof script == 'string' && script.startsWith('novel')) {
