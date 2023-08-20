@@ -3,7 +3,6 @@ import Footer from "./footer";
 import NavMenu from "./components/NavMenu";
 import './global.css'
 import dynamic from 'next/dynamic';
-import { NotoFour } from "./utils/FontPresets";
 import AudioEngine from "./components/AudioEngine";
 
 export const metadata = {
@@ -23,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <NavMenu />
                 {children}
                 <Footer />
-                <AudioEngine src="/music/bgm.mp3" delay={5500}/>
+                <AudioEngine src="/music/bgm.mp3" delay={6000}/>
             </body>
         </html>
     )

@@ -26,6 +26,7 @@ function usePageVisibility() {
 export default function AudioEngine({ src, delay = 0 }) {
     const [isPlaying, setIsPlaying] = useState(true);
     const [delayedDone, setDelayedDone] = useState(false);
+    const [initialPlay, setInitialPlay] = useState(false);
     const isVisible = usePageVisibility();
     const audioRef = useRef<HTMLAudioElement>(null);
     const volumeIntervalRef = useRef<number | null>(null); // Store the interval ID
@@ -61,7 +62,20 @@ export default function AudioEngine({ src, delay = 0 }) {
     };
 
     useEffect(() => {
-        if (audioRef.current) {
+        if (!initialPlay && !delayedDone) {
+            const timeoutId = setTimeout(() => {
+                if (audioRef.current) {
+                    audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+                    setDelayedDone(true);
+                    setInitialPlay(true);
+                }
+            }, delay);
+            return () => clearTimeout(timeoutId);
+        }
+    }, [delayedDone, initialPlay]);
+
+    useEffect(() => {
+        if (audioRef.current && initialPlay) {
             audioRef.current.volume = 0.04;
             if (isPlaying && !isVisible) {
                 adjustVolumeGradually(0.008); // Lowered volume
@@ -75,18 +89,7 @@ export default function AudioEngine({ src, delay = 0 }) {
                 audioRef.current.pause();
             }
         }
-
-        if (!delayedDone) {
-            const timeoutId = setTimeout(() => {
-                if (audioRef.current) {
-                    audioRef.current.play().catch(error => console.error("Audio play failed:", error));
-                }
-            }, delay);
-            setDelayedDone(true);
-            return () => clearTimeout(timeoutId);
-        }
-
-    }, [isPlaying, isVisible]);
+    }, [isPlaying, isVisible, initialPlay]);
 
 
     return (
