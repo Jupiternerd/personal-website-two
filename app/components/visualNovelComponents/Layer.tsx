@@ -12,7 +12,6 @@ interface LayerProps {
 }
 
 const Layer: React.FC<LayerProps> = ({ source, type, position, vfx = undefined, priority = false }) => {
-    console.log(source as string);
     return (
     <div 
     key={source as string}

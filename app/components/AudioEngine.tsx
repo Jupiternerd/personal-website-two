@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
+import { NotoFour } from '../utils/FontPresets';
+import styles from "./visualNovelComponents/ChoiceBox.module.css"
 
 function usePageVisibility() {
     const [isVisible, setIsVisible] = useState(true);
@@ -23,22 +25,31 @@ function usePageVisibility() {
 
 export default function AudioEngine({ src, delay = 0 }) {
     const [isPlaying, setIsPlaying] = useState(true);
+    const [delayedDone, setDelayedDone] = useState(false);
     const isVisible = usePageVisibility();
     const audioRef = useRef<HTMLAudioElement>(null);
+    const volumeIntervalRef = useRef<number | null>(null); // Store the interval ID
+
 
     const adjustVolumeGradually = (targetVolume: number) => {
         if (!audioRef.current) return;
 
-        const volumeStep = targetVolume > audioRef.current.volume ? 0.001 : -0.001;
-        const interval = setInterval(() => {
+        if (volumeIntervalRef.current) {
+            clearInterval(volumeIntervalRef.current); // Clear any existing interval
+        }
+
+        let volumeStep = targetVolume > audioRef.current.volume ? 0.002 : -0.004;
+        volumeIntervalRef.current = window.setInterval(() => {
             if (!audioRef.current) return;
 
             if (volumeStep > 0 && audioRef.current.volume >= targetVolume) {
                 audioRef.current.volume = targetVolume;
-                clearInterval(interval);
+                if (volumeIntervalRef.current)
+                clearInterval(volumeIntervalRef?.current);
             } else if (volumeStep < 0 && audioRef.current.volume <= targetVolume) {
                 audioRef.current.volume = targetVolume;
-                clearInterval(interval);
+                if (volumeIntervalRef.current)
+                clearInterval(volumeIntervalRef?.current);
             } else {
                 audioRef.current.volume += volumeStep;
             }
@@ -51,32 +62,39 @@ export default function AudioEngine({ src, delay = 0 }) {
 
     useEffect(() => {
         if (audioRef.current) {
-            audioRef.current.volume = 0.01;
+            audioRef.current.volume = 0.04;
             if (isPlaying && !isVisible) {
                 adjustVolumeGradually(0.008); // Lowered volume
             } else {
-                adjustVolumeGradually(0.01); // Normal volume
+                adjustVolumeGradually(0.04); // Normal volume
+            }
+
+            if (isPlaying) {
+                audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+            } else {
+                audioRef.current.pause();
             }
         }
 
-        const timeoutId = setTimeout(() => {
-            if (audioRef.current) {
-                audioRef.current.play();
-            }
-        }, delay);
+        if (!delayedDone) {
+            const timeoutId = setTimeout(() => {
+                if (audioRef.current) {
+                    audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+                }
+            }, delay);
+            setDelayedDone(true);
+            return () => clearTimeout(timeoutId);
+        }
 
-        return () => clearTimeout(timeoutId);
-        
     }, [isPlaying, isVisible]);
 
+
     return (
-        <div style={{ position: 'fixed', right: '10px', bottom: '10px' }}>
-            <button onClick={togglePlay}>
-                Music {isPlaying ? 'on' : 'off'}
+        <div key="audio" style={{ position: 'fixed', right: '10px', bottom: '10px', marginTop: "20px", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <button className={`${NotoFour.className} ${styles.button} ${styles.fadeIn}`} onClick={togglePlay}>
+                Music {isPlaying ? ' (on) | off ' : ' on | (off) '}
             </button>
-            {isPlaying && (
-                <audio ref={audioRef} src={src} loop></audio>
-            )}
+            <audio ref={audioRef} src={src} loop></audio>
         </div>
     );
 }

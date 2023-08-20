@@ -20,6 +20,7 @@ const Choicebox: React.FC<ChoiceboxProps> = ({ text, script, invoker }) => {
     return (
         <button
             className={`${NotoFour.className} ${styles.button} ${fadeIn ? styles.fadeIn : ''}`}
+            style={{width: "50vw"}}
             onClick={() => invoker(script)}>
             {text}
         </button>

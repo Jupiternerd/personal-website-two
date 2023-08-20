@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <NavMenu />
                 {children}
                 <Footer />
-                <AudioEngine src="/music/bgm.mp3" delay={5000}/>
+                <AudioEngine src="/music/bgm.mp3" delay={5500}/>
             </body>
         </html>
     )
