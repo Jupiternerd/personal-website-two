@@ -1,5 +1,5 @@
 .openUp {
-    animation: openUp 8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: openUp 6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     overflow: hidden;
     mask-image: linear-gradient(to bottom, transparent 50%, black 50%);
     mask-size: 100% 200%;
@@ -23,7 +23,7 @@
 
     100% {
         width: 100vw;
-        height: 60vh
+        height: 65vh
     }
 }
 
@@ -60,4 +60,6 @@
         transform: translateY(0);
     }
 }
+
+
 

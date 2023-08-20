@@ -114,7 +114,7 @@ export default function VisualNovel() {
                     timeoutId = setTimeout(() => {
                         setPlayIntro(false);
                         setShowChoiceBox(true);
-                    }, 8000); // 8 seconds
+                    }, 6000); // 6 seconds
 
                     // Set the ref to false so this block doesn't run again
                     isInitialMount.current = false;
