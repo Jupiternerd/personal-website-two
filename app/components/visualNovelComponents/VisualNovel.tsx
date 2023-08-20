@@ -35,8 +35,8 @@ function setUserData(userData: PersistantUserInterface) {
 
 export function deleteUserData() {
     localStorage.removeItem("userData");
-    // refresh
-    window.location.reload();
+    // refresh to homepage
+    window.location.href = "/";
 }
 
 async function getNovelData(id: number): Promise<NovelInterface> {
@@ -215,7 +215,7 @@ export default function VisualNovel() {
             justifyContent: 'center',
             alignItems: 'center'
         }}>
-            <div style={{ width: '80vw', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: '0px' }}>
+            <div style={{ width: '80vw', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {scene}
                 {textBox}
             </div>

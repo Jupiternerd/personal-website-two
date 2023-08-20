@@ -81,6 +81,13 @@ a:hover::after {
     opacity: 1;
 }
 
+/*icons*/
+.icon-size {
+    width: 25px;
+    height: 25px;
+}
+
+
 /* Custom Cursor */
 
 #customCursor {
