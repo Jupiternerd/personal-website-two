@@ -32,15 +32,15 @@ export default function About() {
                         <br />
                     </p>
                     <h2>Creative Stuff Portflios (Click em)</h2>
-                    <p style={{paddingLeft: '30px'}}>
+                    <p style={{paddingLeft: '30px', fontSize: '20px'}}>
                         <Link href="https://www.artstation.com/shokkunn" target="_blank">Art Station</Link><br /> 
                         <Link href="https://pixiv.me/shokkuun" target="_blank">Pixiv</Link><br />
                         <Link href="https://www.instagram.com/shokk.unn/" target="_blank">Instagram</Link><br />
-                        <Link href="https://twitter.com/Shokkuun" target="_blank">Twitter</Link><br />
+                        <Link href="https://twitter.com/Shokkuun" target="_blank">Twitter (X?)</Link><br />
                         @Shokkunn on Discord
                     </p>
                     <h2>Github (Click it)</h2>
-                    <p style={{ paddingLeft: '30px' }}>
+                    <p style={{ paddingLeft: '30px', fontSize: '20px' }}>
                         <Link href="https://github.com/Jupiternerd" target="_blank">Github</Link>
                     </p>
                 </div>
