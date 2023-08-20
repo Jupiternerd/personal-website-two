@@ -1,8 +1,8 @@
 // author = shokkunn
 
 "use client";
-import { useEffect, useState } from "react";
-import { PersistantUserInterface, UserDataInterface } from "../../utils/struct/user";
+import { useEffect, useRef, useState } from "react";
+import { PersistantUserInterface } from "../../utils/struct/user";
 import { CharacterInterface } from "../../utils/struct/character";
 import { NovelInterface, SlideInterfaceTypes, VNNavigationScripts } from "../../utils/struct/novel";
 import Scene from "./Scene";
@@ -78,8 +78,10 @@ export default function VisualNovel() {
     const [preloadedData, setPreloadedData] = useState<PreloadedData | null>(null);
     const [user, setUser] = useState<PersistantUserInterface | null>(null);
     const [xy, setXY] = useState<{x: number, y: number} | null>({x: 0, y: 0});
-    const [playIntro, setPlayIntro] = useState(true); 
-    const [expandHorizontal, setExpandHorizontal] = useState(false);
+    const [playIntro, setPlayIntro] = useState(true);
+    const [showChoiceBox, setShowChoiceBox] = useState(false);
+    const isInitialMount = useRef(true);
+    const [expandHorizon, setExpandHorizon] = useState(false);
 
     async function loadNovelData(novelId: number = xy?.x ?? 0, slideId: number = xy?.y ?? 0) {
         let novelResponse = await getNovelData(novelId),
@@ -93,10 +95,11 @@ export default function VisualNovel() {
     }
 
     useEffect(() => {
-        if (xy?.x === 0 && xy?.y === 1) {
-            setExpandHorizontal(true);
-        }
-    }, [user]);
+        console.log("VisualNovel mounted!");
+        return () => {
+            console.log("VisualNovel unmounted!");
+        };
+    }, []);
 
     useEffect(() => {
         let timeoutId: NodeJS.Timeout;
@@ -106,10 +109,16 @@ export default function VisualNovel() {
                 setUser(getUserData());
                 await loadNovelData();
 
-                // Once the data is loaded, set up the timeout for the intro
-                timeoutId = setTimeout(() => {
-                    setPlayIntro(false);
-                }, 8000); // 8 seconds
+                if (isInitialMount.current) {
+                    // If it's the initial mount, set up the timeout for the intro
+                    timeoutId = setTimeout(() => {
+                        setPlayIntro(false);
+                        setShowChoiceBox(true);
+                    }, 8000); // 8 seconds
+
+                    // Set the ref to false so this block doesn't run again
+                    isInitialMount.current = false;
+                }
             } catch (e) {
                 reloadNovelWeb();
             }
@@ -142,9 +151,9 @@ export default function VisualNovel() {
 
     const scene = (
         <Scene
-            key={slide.background.source}
+            //key={`${slide.background.source}`}
             playIntro={playIntro}
-            expandHorizon={expandHorizontal}
+            expandHorizon={expandHorizon}
             backgroundImage={slide.background}
             characterImage={characterImage}
         />
@@ -153,37 +162,47 @@ export default function VisualNovel() {
     function setAndStoreUserState(x: number, y: number) {
         if (!user) return;
         setXY({x, y});
+        setUserData(user);
         loadNovelData(x, y);
     }
 
-    const navigate = (script: VNNavigationScripts) => {
+    const navigate = (script: VNNavigationScripts, set?: { [key: string]: string }) => {
         if (!user || !xy) return;
-        setExpandHorizontal(false);
-        // special novel script:
+
+        if (xy?.x === 0 && xy?.y === 1 && !expandHorizon) {
+            setExpandHorizon(true);
+        }
         if (typeof script == 'string' && script.startsWith('novel')) {
             const id = parseInt(script.split(':')[1]);
             if (isNaN(id)) return;
+            if (set) {
+                for (const [key, value] of Object.entries(set)) {
+                    user.flags[key] = value;
+                }
+                setUser(user);
+            }
             loadNovelData(id, 0);
             setAndStoreUserState(id, 0);
-        }
-        switch (script) {
-            case 'next':
-                // check if there is a next slide
-                if (xy?.y + 1 < preloadedData.novel.slides.length) {
-                    setAndStoreUserState(xy?.x, xy?.y + 1);
-                }
-                break;
-            case 'previous':
-                // check if there is a previous slide
-                if (xy?.y - 1 >= 0) {
-                    setAndStoreUserState(xy?.x, xy?.y - 1);
-                }
-                break;
-            default:
-                if (typeof script === 'number' && script >= 0 && script < preloadedData.novel.slides.length) {
-                    setAndStoreUserState(xy?.x, script);
-                }
-                break;
+        } else {
+            switch (script) {
+                case 'next':
+                    // check if there is a next slide
+                    if (xy?.y + 1 < preloadedData.novel.slides.length) {
+                        setAndStoreUserState(xy?.x, xy?.y + 1);
+                    }
+                    break;
+                case 'previous':
+                    // check if there is a previous slide
+                    if (xy?.y - 1 >= 0) {
+                        setAndStoreUserState(xy?.x, xy?.y - 1);
+                    }
+                    break;
+                default:
+                    if (typeof script === 'number' && script >= 0 && script < preloadedData.novel.slides.length) {
+                        setAndStoreUserState(xy?.x, script);
+                    }
+                    break;
+            }
         }
     }
 
@@ -199,17 +218,18 @@ export default function VisualNovel() {
                 {textBox}
             </div>
             <div style={{ marginTop: "20px", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {slide.choices.map((choice, index) => {
+                {showChoiceBox && slide.choices.map((choice, index) => {
                     if (choice?.checks && user?.flags) {
                         if (!compareChecks(choice.checks, user?.flags)) return null;
                     }
                     return (
-                        <Choicebox
-                            key={index}
-                            text={choice.text}
-                            script={choice.script}
-                            invoker={navigate}
-                        />
+                        <div className={`${!playIntro ? 'visible' : ''}`} key={index}>
+                            <Choicebox
+                                text={choice.text}
+                                script={choice.script}
+                                invoker={navigate}
+                            />
+                        </div>
                     );
                 })}
             </div>

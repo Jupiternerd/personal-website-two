@@ -11,8 +11,11 @@ interface LayerProps {
     priority?: boolean;
 }
 
-const Layer: React.FC<LayerProps> = ({ source, type, position, vfx = undefined, priority = false }) => (
+const Layer: React.FC<LayerProps> = ({ source, type, position, vfx = undefined, priority = false }) => {
+    console.log(source as string);
+    return (
     <div 
+    key={source as string}
     className= {`${vfx?.map(vfx => vfx)}`}
     style={{ position: 'absolute', width: '100%', height: '100%' }}>
         {
@@ -25,6 +28,6 @@ const Layer: React.FC<LayerProps> = ({ source, type, position, vfx = undefined, 
                 </video>
         }
     </div>
-);
+)};
 
 export default Layer;

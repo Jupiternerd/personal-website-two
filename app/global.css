@@ -16,8 +16,6 @@ body, html {
     cursor: none;
 }
 
-
-
 /* The Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
@@ -82,7 +80,6 @@ a::after {
 a:hover::after {
     opacity: 1;
 }
-
 
 /* Custom Cursor */
 
