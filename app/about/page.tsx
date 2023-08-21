@@ -55,7 +55,7 @@ export default function About() {
                         and can be used as a blog with the way it is set up. I am pretty proud of it and I hope you enjoy it as well.
                         <br />
                         <br />
-                        And yes, there is a story to the visual novel. It's based on flags like traditional visual novels so choose your words carefully~
+                        And yes, there is a story to the visual novel. It&apos;s based on flags like traditional visual novels so choose your words carefully~
                         <br />
                         <br />
                         If you get into a dead end or want to restart, click the button below. (The warning below is that it resets the conversation flow but flags are persistant)<br />
@@ -70,7 +70,7 @@ export default function About() {
                 <h2 style={{ fontSize: "25px" }}><u>Credits</u></h2>
                 <p style={{ paddingTop: "8px" }}>
                     Made with ♥ and a few gallons of Redbull by Wai Hlaing.
-                    Placeholder Music by: Milkoi & Mirai - "A world without you"
+                    Placeholder Music by: Milkoi & Mirai - &quot; A world without you &quot;
                     <br />
                     Assets have been created using Stable Diffusion.</p>
             </div>
