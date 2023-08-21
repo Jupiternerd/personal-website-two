@@ -77,6 +77,11 @@ const defaultNovel: NovelInterface = {
                 "id": 0,
                 "mood": 0
             },
+            "effects": {
+                "character": {
+                    "motion": [0]
+                }
+            },
             "speaker": {
                 "text": "Hello, world!"
             },

@@ -9,6 +9,7 @@ import Scene from "./Scene";
 import TextBox from "./TextBox";
 import Choicebox from "./Choices";
 import AudioEngine from "../AudioEngine";
+import { MotionEffectsEnum } from "../../utils/struct/visualEffects";
 
 function getUserData(): PersistantUserInterface {
     const defaultUserData: PersistantUserInterface = {
@@ -156,13 +157,6 @@ export default function VisualNovel() {
     }
 
     useEffect(() => {
-        console.log("VisualNovel mounted!");
-        return () => {
-            console.log("VisualNovel unmounted!");
-        };
-    }, []);
-
-    useEffect(() => {
         let timeoutId: NodeJS.Timeout;
 
         const fetchDataAndSetupIntro = async () => {
@@ -202,7 +196,7 @@ export default function VisualNovel() {
     }
 
     const slide = preloadedData.novel.slides[xy?.y ?? 0];
-    let characterImage: { source: string, type: "image" | "video" } | undefined = undefined;
+    let characterImage: { source: string, type: "image" | "video", vfx: MotionEffectsEnum[]} | undefined = undefined;
     let textBox: JSX.Element | null = null;
 
     // why do I gotta do this:
@@ -213,7 +207,12 @@ export default function VisualNovel() {
     if (isSingleCharacterSlide(slide)) {
         const narrowedSlide = slide;
         const Character = preloadedData.characters?.find(character => character._id === narrowedSlide.character.id);
-        characterImage = Character?.files[MoodsEnum[narrowedSlide.character.mood]];
+        const MoodTree = Character?.files[MoodsEnum[narrowedSlide.character.mood]];
+        characterImage = {
+            source: MoodTree.source ?? "",
+            type: MoodTree.type ?? "image",
+            vfx: slide.effects?.character?.motion ?? []
+        };
         textBox = <TextBox text={slide.speaker.text} name={Character?.name ?? "???"} />;
     }
 
@@ -300,7 +299,7 @@ export default function VisualNovel() {
                     );
                 })}
             </div>
-            {expandHorizon && <AudioEngine src="/music/bgm.mp3" delay={2000} />} 
+            {expandHorizon && <AudioEngine src="/music/bgm.mp3" delay={300} />} 
         </div>
     )
 }

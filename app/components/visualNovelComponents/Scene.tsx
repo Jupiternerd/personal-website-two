@@ -9,26 +9,39 @@ interface SceneProps {
     characterImage?: {
         type: "video" | "image"
         source: ImageProps["src"] | string,
-        vfx?: MotionEffectsEnum[]
+        vfx: MotionEffectsEnum[]
     },
     backgroundImage: {
         type: "video" | "image"
-        source: ImageProps["src"] | string,
-        vfx?: MotionEffectsEnum[]
+        source: ImageProps["src"] | string
     }
 }
 
 const Scene: React.FC<SceneProps> = ({ backgroundImage, characterImage, playIntro, expandHorizon }) => {
     // normal background stuff:
-    const backgroundLayer = <Layer source={backgroundImage.source} type={backgroundImage.type} vfx={backgroundImage.vfx} position="cover" priority={false} fadeIn={false} />
-    const characterLayer = characterImage ? <Layer source={characterImage.source} vfx={characterImage.vfx} type={characterImage.type} position="contain" priority={true} fadeIn={true} /> : null
+    const backgroundLayer = <Layer source={backgroundImage.source} type={backgroundImage.type} position="cover" priority={false} />
+    const characterShadowLayer = characterImage ? (
+        <Layer
+            source={characterImage.source}
+            type={characterImage.type}
+            position="contain"
+            priority={true}
+            vfx={characterImage.vfx}
+            customStyles={{
+                filter: 'brightness(0) drop-shadow(25px 10px 0px rgba(0, 0, 0, 1))'
+            }}
+        />
+    ) : null;
+
+    const characterLayer = characterImage ? <Layer source={characterImage.source}
+        vfx={characterImage.vfx} type={characterImage.type} position="contain" priority={true} /> : null
 
     return (
         <div className={[
             "scene",
             playIntro ? Style.openUp : '',
             expandHorizon ? Style.expanding : ''
-        ].join(' ')} style={{ // Apply the incoming style here
+        ].join(' ')} style={{
             display: 'flex',
             position: 'relative',
             justifyContent: 'center',
@@ -36,6 +49,7 @@ const Scene: React.FC<SceneProps> = ({ backgroundImage, characterImage, playIntr
             marginTop: '20px'
         }}>
             {backgroundLayer}
+            {characterShadowLayer}
             {characterLayer}
         </div>
     )
