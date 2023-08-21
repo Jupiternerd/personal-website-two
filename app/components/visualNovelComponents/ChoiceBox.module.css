@@ -5,10 +5,14 @@
     font-size: 17px;
     color: white;
     background-color: transparent;
-    width: 50vw;
     border: 1px solid white;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.8s ease;
+    opacity: 0;
     /* This adds a smooth transition effect */
+}
+
+.button.fadeIn {
+    opacity: 1;
 }
 
 .button:disabled {

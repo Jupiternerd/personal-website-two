@@ -4,7 +4,7 @@ export default function NavMenu() {
     const Style = { margin: '0 25px' };
 
     return (
-        <nav>
+        <nav className="fade-in">
             <ul className={NotoFour.className} style={{ display: 'flex', justifyContent: 'center', listStyle: 'none', marginTop: '20px', fontSize: '21px' }}>
                 <li style={Style}>
                     <Link href="/"> 

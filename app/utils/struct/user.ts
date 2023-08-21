@@ -1,10 +1,18 @@
 // user data will jsut be cookies
 
-export interface UserInterface {
+export interface PersistantUserInterface {
+    flags: { [key: string]: string },
+    blacklisted: boolean
+}
+
+export interface SessionUserInterface {
     state: {
         x: number,
         y: number,
-    },
-    flags: string[],
-    blacklisted: boolean
+    }
+}
+
+export interface UserDataInterface {
+    persistant: PersistantUserInterface,
+    session: SessionUserInterface
 }

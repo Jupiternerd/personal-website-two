@@ -5,6 +5,8 @@ export type VNNavigationScripts = "next" | "previous" | number | `novel:${number
 export interface VNNavigationInterface {
     text: string;
     script: VNNavigationScripts;
+    checks?: {[key: string]: string},
+    setPersistant?: {[key: string]: string}
 }
 
 export interface EffectsInterface {
@@ -69,8 +71,15 @@ const defaultNovel: NovelInterface = {
             }]
          },
         {
-            "type": 0,
+            "type": 1,
             "index": 0,
+            "character": {
+                "id": 0,
+                "mood": 0
+            },
+            "speaker": {
+                "text": "Hello, world!"
+            },
             "background": {
                 "source": "/bgs/bg_3_final.webm",
                 "type": "video",
