@@ -17,7 +17,7 @@ export default function About() {
                         Thank you for visiting my website!<br /><br />
                         My name is Wai Hlaing and I am a student at CUNY Hunter College. I am passionate about
                         arts and sciences and I love to just create things. I am an avid artist, writer and programmer,
-                        which leaves me with a lot of sleepless nights from just working and creating.
+                        which leaves me with a lot of things to do.
                         <br /><br />
                         I am currently trying to become a UI/UX engineer so I can create fun experiences like this for people.<br /> 
                         <br />

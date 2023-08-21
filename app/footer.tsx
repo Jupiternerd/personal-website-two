@@ -2,7 +2,7 @@ import React from 'react';
 import { NotoFour } from './utils/FontPresets';
 const Footer: React.FC = () => {
   return (
-    <footer className={NotoFour.className} style={{
+    <footer className={`${NotoFour.className} fade-in`} style={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',

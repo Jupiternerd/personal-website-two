@@ -8,6 +8,7 @@ import { NovelInterface, SlideInterfaceTypes, VNNavigationScripts } from "../../
 import Scene from "./Scene";
 import TextBox from "./TextBox";
 import Choicebox from "./Choices";
+import AudioEngine from "../AudioEngine";
 
 function getUserData(): PersistantUserInterface {
     const defaultUserData: PersistantUserInterface = {
@@ -116,7 +117,7 @@ export default function VisualNovel() {
                     timeoutId = setTimeout(() => {
                         setPlayIntro(false);
                         setShowChoiceBox(true);
-                    }, 6000); // 6 seconds
+                    }, 5000); // 6 seconds
 
                     // Set the ref to false so this block doesn't run again
                     isInitialMount.current = false;
@@ -235,6 +236,7 @@ export default function VisualNovel() {
                     );
                 })}
             </div>
+            {expandHorizon && <AudioEngine src="/music/bgm.mp3" delay={2000} />} 
         </div>
     )
 }
