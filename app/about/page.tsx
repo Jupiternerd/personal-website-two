@@ -15,13 +15,12 @@ export default function About() {
                     <h2 style={{ fontSize: "25px" }}>About Me</h2>
                     <p style={{ paddingTop: "8px" }}>
                         Thank you for visiting my website!<br /><br />
-                        My name is Wai Hlaing and I am a student at CUNY Hunter College. I am passionate about
-                        arts and sciences and I love to just create things. I am an avid artist, writer and programmer,
-                        which leaves me with a lot of things to do.
+                        My name is Wai Hlaing and I am a student at CUNY Hunter College. I like to do creative stuff with code and just do fun stuff in general.
+                        Currently I am experimenting with creative writing, visual novels and Stable Diffusion.
                         <br /><br />
-                        I am currently trying to become a UI/UX engineer so I can create fun experiences like this for people.<br /> 
+                        I am studying to be a UI/UX engineer in the future so I can create fun experiences like this. Please contact me to let me know what you think!<br /> 
                         <br />
-                        If you want to know more about me, you can play the visual novel on the home page (full of secrets) or contact me (contacts)!
+                        If you want to get to know me, you can play the visual novel on the home page (full of secrets) or contact me (contacts)!
                         <br/>
                         <br/>
                         School: CUNY Hunter College<br />
@@ -51,8 +50,10 @@ export default function About() {
                         Tech Stack Used: React, Next.js, TypeScript, Node.js, MongoDB<br /><br />
 
                         The visual novel aspect of the site was put together by scrapping together my old MEDP project.
-                        It had the same UI but it was a lot more bare bones and was static. This site, however, is dynamic
+                        It had the same UI but it was a lot more bare bones and was static. This site, however, is dynamic (Novels are stored in MongoDb)
                         and can be used as a blog with the way it is set up. I am pretty proud of it and I hope you enjoy it as well.
+                        <br />
+                        (Not built using Renpy or any other visual novel engine, custom made :^D)
                         <br />
                         <br />
                         And yes, there is a story to the visual novel. It&apos;s based on flags like traditional visual novels so choose your words carefully~
