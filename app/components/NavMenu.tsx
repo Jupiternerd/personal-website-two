@@ -1,13 +1,22 @@
 import Link from "next/link"
 import { NotoFour } from "../utils/FontPresets"
+
 export default function NavMenu() {
     const Style = { margin: '0 25px' };
 
     return (
         <nav className="fade-in">
-            <ul className={NotoFour.className} style={{ display: 'flex', justifyContent: 'center', listStyle: 'none', marginTop: '20px', fontSize: '21px' }}>
+            <ul className={NotoFour.className} style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                listStyle: 'none',
+                margin: 0,
+                padding: '25px',
+                fontSize: '21px'
+            }}>
                 <li style={Style}>
-                    <Link href="/"> 
+                    <Link href="/">
                         HOME
                     </Link>
                 </li>
