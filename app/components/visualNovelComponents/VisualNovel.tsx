@@ -3,8 +3,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { PersistantUserInterface } from "../../utils/struct/user";
-import { CharacterInterface } from "../../utils/struct/character";
-import { NovelInterface, SlideInterfaceTypes, VNNavigationScripts } from "../../utils/struct/novel";
+import { CharacterInterface, MoodsEnum } from "../../utils/struct/character";
+import { NovelInterface, SingleCharacterSlide, SlideInterfaceTypes, SlideInterfaces, VNNavigationScripts } from "../../utils/struct/novel";
 import Scene from "./Scene";
 import TextBox from "./TextBox";
 import Choicebox from "./Choices";
@@ -73,8 +73,44 @@ function reloadNovelWeb() {
     window.location.reload();
 }
 interface PreloadedData {
-    character?: CharacterInterface;
+    characters?: CharacterInterface[];
     novel: NovelInterface;
+}
+
+function getUniqueCharacters(slides: NovelInterface["slides"]): Array<{ id: number, mood: MoodsEnum }> {
+    const uniqueCharacters: Array<{ id: number, mood: MoodsEnum }> = [];
+
+    slides.forEach(slide => {
+        if (slide.type === SlideInterfaceTypes.single && !uniqueCharacters.some(char => char.id === slide.character.id && char.mood === slide.character.mood)) {
+            uniqueCharacters.push(slide.character);
+        }
+    });
+
+    return uniqueCharacters;
+}
+
+function getUniqueBackgrounds(slides: NovelInterface["slides"]): Array<{ source: string, type: "image" | "video" }> {
+    const uniqueBackgrounds: Array<{ source: string, type: "image" | "video" }> = [];
+
+    slides.forEach(slide => {
+        if (!uniqueBackgrounds.some(bg => bg.source === slide.background.source)) {
+            uniqueBackgrounds.push(slide.background);
+        }
+    });
+
+    return uniqueBackgrounds;
+}
+
+function getUniqueCharacterMoodSources(fileTree: CharacterInterface["files"], uniqueCharacters: Array<{ id: number, mood: MoodsEnum }>): Array<{ source: string, type: "image" | "video" }> {
+    const uniqueMoodSources: Array<{ source: string, type: "image" | "video" }> = [];
+
+    uniqueCharacters.forEach(character => {
+        if (!uniqueMoodSources.some(mood => mood.source === fileTree[MoodsEnum[character.mood]].source)) {
+            uniqueMoodSources.push(fileTree[MoodsEnum[character.mood]]);
+        }
+    });
+
+    return uniqueMoodSources;
 }
 
 export default function VisualNovel() {
@@ -86,15 +122,37 @@ export default function VisualNovel() {
     const isInitialMount = useRef(true);
     const [expandHorizon, setExpandHorizon] = useState(false);
 
-    async function loadNovelData(novelId: number = xy?.x ?? 0, slideId: number = xy?.y ?? 0) {
-        let novelResponse = await getNovelData(novelId),
-            slide = novelResponse.slides.find(slide => slide.index === slideId);
-        let characterResponse: CharacterInterface | undefined
-            = (slide?.type === SlideInterfaceTypes.single ? await getCharacterData(slide.character.id)
-                : undefined);
+    async function preLoadNovelAssets(assets: {source: string, type: "image" | "video"}[]) {
+        // preload the backgrounds
+        for (const asset of assets) {
+            if (asset.type === "image") {
+                new Image().src = asset.source;
+            } else if (asset.type === "video") {
+                const video = document.createElement("video");
+                video.src = asset.source;
+                video.load(); // This triggers the loading of the video
+            }
+        }
+    }
 
+    async function loadNovelData(novelId: number = xy?.x ?? 0) {
+        const novelResponse = await getNovelData(novelId);
+        const slideWithCharacter = novelResponse.slides.filter(slide => slide.type === SlideInterfaceTypes.single) as SingleCharacterSlide[];
+
+        // get character assets
+        let characterResponse: CharacterInterface[] = [];
+        for (const slide of slideWithCharacter) characterResponse.push(await getCharacterData(slide.character.id));
+
+        // unique assets
+        const uniqueBackgroundSources = getUniqueBackgrounds(novelResponse.slides);
+        const uniqueCharacters = getUniqueCharacters(novelResponse.slides);
+        const uniqueCharacterMoodSources = getUniqueCharacterMoodSources(characterResponse[0]?.files, uniqueCharacters) ?? [];
+
+        // preload the assets
+        await preLoadNovelAssets([...uniqueBackgroundSources, ...uniqueCharacterMoodSources]);
+        
         // set the preloaded data
-        setPreloadedData({ character: characterResponse, novel: novelResponse });
+        setPreloadedData({ characters: characterResponse, novel: novelResponse });
     }
 
     useEffect(() => {
@@ -143,13 +201,20 @@ export default function VisualNovel() {
         }}>Loading...</div>;
     }
 
-    let slide = preloadedData.novel.slides[xy?.y ?? 0];
+    const slide = preloadedData.novel.slides[xy?.y ?? 0];
     let characterImage: { source: string, type: "image" | "video" } | undefined = undefined;
     let textBox: JSX.Element | null = null;
 
-    if (slide.type === SlideInterfaceTypes.single) {
-        characterImage = preloadedData?.character?.files[slide.character.mood];
-        textBox = <TextBox text={slide.speaker.text} name={preloadedData.character?.name ?? "???"} />;
+    // why do I gotta do this:
+    function isSingleCharacterSlide(slide: SlideInterfaces): slide is SingleCharacterSlide {
+        return slide.type === SlideInterfaceTypes.single;
+    }
+
+    if (isSingleCharacterSlide(slide)) {
+        const narrowedSlide = slide;
+        const Character = preloadedData.characters?.find(character => character._id === narrowedSlide.character.id);
+        characterImage = Character?.files[MoodsEnum[narrowedSlide.character.mood]];
+        textBox = <TextBox text={slide.speaker.text} name={Character?.name ?? "???"} />;
     }
 
     const scene = (
@@ -166,7 +231,6 @@ export default function VisualNovel() {
         if (!user) return;
         setXY({x, y});
         setUserData(user);
-        loadNovelData(x, y);
     }
 
     const navigate = (script: VNNavigationScripts, set?: { [key: string]: string }) => {
@@ -184,7 +248,7 @@ export default function VisualNovel() {
                 }
                 setUser(user);
             }
-            loadNovelData(id, 0);
+            loadNovelData(id);
             setAndStoreUserState(id, 0);
         } else {
             switch (script) {
@@ -194,7 +258,7 @@ export default function VisualNovel() {
                         setAndStoreUserState(xy?.x, xy?.y + 1);
                     }
                     break;
-                case 'previous':
+                case 'back':
                     // check if there is a previous slide
                     if (xy?.y - 1 >= 0) {
                         setAndStoreUserState(xy?.x, xy?.y - 1);

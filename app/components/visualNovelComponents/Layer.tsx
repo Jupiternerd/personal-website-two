@@ -9,17 +9,18 @@ interface LayerProps {
     position: Property.ObjectFit;
     vfx?: MotionEffectsEnum[];
     priority?: boolean;
+    fadeIn?: boolean
 }
 
-const Layer: React.FC<LayerProps> = ({ source, type, position, vfx = undefined, priority = false }) => {
+const Layer: React.FC<LayerProps> = ({ source, type, position, vfx = undefined, priority = false, fadeIn = false}) => {
     return (
     <div 
     key={source as string}
-    className= {`${vfx?.map(vfx => vfx)}`}
+            className={`${vfx?.map(vfx => vfx)} ${fadeIn ? 'character-fade-in' : ''}`}
     style={{ position: 'absolute', width: '100%', height: '100%' }}>
         {
             type === 'image' ?
-                <Image alt="layer" src={source as ImageProps["src"]} layout="fill" objectFit={position} priority={priority} />  // 'fill' prop replaced with 'layout'
+                    <Image alt="layer" src={source as ImageProps["src"]} fill={true} style={{ objectFit: position }} priority={priority} />  // 'fill' prop replaced with 'layout'
                 :
                 <video preload="auto" style={{ width: '100%', height: '100%', objectFit: position }} autoPlay loop muted playsInline>
                     <source src={source as string} type="video/webm" />

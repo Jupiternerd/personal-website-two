@@ -1,7 +1,7 @@
 import { MoodsEnum } from "./character";
 import { MotionEffectsEnum } from "./visualEffects";
 
-export type VNNavigationScripts = "next" | "previous" | number | `novel:${number}`;
+export type VNNavigationScripts = "next" | "back" | number | `novel:${number}`;
 export interface VNNavigationInterface {
     text: string;
     script: VNNavigationScripts;
@@ -86,7 +86,7 @@ const defaultNovel: NovelInterface = {
             },
             "choices": [{
                 "text": "Go back",
-                "script": "previous"
+                "script": "back"
             }]
         }
         ]

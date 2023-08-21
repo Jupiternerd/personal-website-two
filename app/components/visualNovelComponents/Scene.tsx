@@ -20,8 +20,8 @@ interface SceneProps {
 
 const Scene: React.FC<SceneProps> = ({ backgroundImage, characterImage, playIntro, expandHorizon }) => {
     // normal background stuff:
-    const backgroundLayer = <Layer source={backgroundImage.source} type={backgroundImage.type} vfx={backgroundImage.vfx} position="cover" priority={false} />
-    const characterLayer = characterImage ? <Layer source={characterImage.source} vfx={characterImage.vfx} type={characterImage.type} position="contain" priority={true} /> : null
+    const backgroundLayer = <Layer source={backgroundImage.source} type={backgroundImage.type} vfx={backgroundImage.vfx} position="cover" priority={false} fadeIn={false} />
+    const characterLayer = characterImage ? <Layer source={characterImage.source} vfx={characterImage.vfx} type={characterImage.type} position="contain" priority={true} fadeIn={true} /> : null
 
     return (
         <div className={[
@@ -35,8 +35,8 @@ const Scene: React.FC<SceneProps> = ({ backgroundImage, characterImage, playIntr
             alignItems: 'center',
             marginTop: '20px'
         }}>
-            {characterLayer}
             {backgroundLayer}
+            {characterLayer}
         </div>
     )
 }
