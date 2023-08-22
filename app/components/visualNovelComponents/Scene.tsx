@@ -46,7 +46,7 @@ const Scene: React.FC<SceneProps> = ({ backgroundImage, characterImage, playIntr
             position: 'relative',
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: '20px'
+            marginTop: '10px'
         }}>
             {backgroundLayer}
             {characterShadowLayer}

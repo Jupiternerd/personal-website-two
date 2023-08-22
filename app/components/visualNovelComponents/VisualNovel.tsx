@@ -279,11 +279,17 @@ export default function VisualNovel() {
             justifyContent: 'center',
             alignItems: 'center'
         }}>
-            <div style={{ width: '80vw', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+            <div style={{
+                width: '80vw',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
                 {scene}
                 {textBox}
             </div>
-            <div style={{ marginTop: "20px", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ marginTop: "10px", display: 'flex', flexDirection: 'column', alignItems: 'center', borderTop: (playIntro || !isSingleCharacterSlide(slide) ? '' : '1px solid white') }}>
                 {showChoiceBox && slide.choices.map((choice, index) => {
                     if (choice?.checks && user?.flags) {
                         if (!compareChecks(choice.checks, user?.flags)) return null;

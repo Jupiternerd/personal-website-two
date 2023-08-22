@@ -37,7 +37,7 @@ const TextBox: React.FC<TextboxProps> = ({ name, text }) => {
     }, []);
 
     return (
-        <div className={NotoFour.className} style={{ zIndex: 0, width: '50vw', backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '10px', color: 'white', borderRadius: '5px', marginTop: '20px' }}>
+        <div className={NotoFour.className} style={{ zIndex: 0, width: '50vw', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', borderRadius: '5px', marginTop: '10px' }}>
             <h1 style={{ fontSize: '35px' }}><u>{name}</u></h1>
             <p style={{ fontSize: '30px', marginTop: '10px', textAlign: "left" }}>
                 {`${currentText}`}

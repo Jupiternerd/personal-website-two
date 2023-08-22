@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { NotoFour } from "../utils/FontPresets";
 import { deleteUserData } from "../components/visualNovelComponents/VisualNovel";
@@ -49,7 +48,7 @@ export default function About() {
                     <p style={{ paddingTop: "8px", textAlign: "right" }}>
                         Tech Stack Used: React, Next.js, TypeScript, Node.js, MongoDB<br /><br />
 
-                        The visual novel aspect of the site was put together by scrapping together my old MEDP project.
+                        The visual novel aspect of the site was put scraped together using my old MEDP project.
                         It had the same UI but it was a lot more bare bones and was static. This site, however, is dynamic (Novels are stored in MongoDb)
                         and can be used as a blog with the way it is set up. I am pretty proud of it and I hope you enjoy it as well.
                         <br />
