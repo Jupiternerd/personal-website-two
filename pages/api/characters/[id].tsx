@@ -20,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     }
     catch (err) {
+        console.error(err)
         return res.status(500).send(err.message);
     }
 
@@ -32,6 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         res.status(200).json(ch);
     } catch (err) {
+        console.error(err)
         res.status(500).send(err.message);
     }
 }

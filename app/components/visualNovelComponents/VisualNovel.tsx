@@ -21,11 +21,11 @@ function getUserData(): PersistantUserInterface {
 
     try {
         const persistant = localStorage.getItem("userData");
-
         if (!persistant) throw new Error("No persistant user data");
 
         return JSON.parse(persistant) as PersistantUserInterface;
     } catch (error) {
+        console.error(error)
         // add in a default user data
         localStorage.setItem("userData", JSON.stringify(defaultUserData));
         return defaultUserData;
@@ -109,11 +109,10 @@ function getUniqueCharacters(slides: NovelInterface["slides"]): Array<{ id: numb
     const uniqueCharacters: Array<{ id: number, mood: MoodsEnum }> = [];
 
     slides.forEach(slide => {
-        if (slide.type === SlideInterfaceTypes.single && !uniqueCharacters.some(char => char.id === slide.character.id && char.mood === slide.character.mood)) {
+        if (slide.type === SlideInterfaceTypes.single && !uniqueCharacters.some(char => char?.id === slide.character?.id && char.mood === slide.character.mood)) {
             uniqueCharacters.push(slide.character);
         }
     });
-
     return uniqueCharacters;
 }
 
@@ -165,15 +164,17 @@ export default function VisualNovel() {
 
     async function loadNovelData(novelId: number = xy?.x ?? 0) {
         const novelResponse = await getNovelData(novelId);
-        const slideWithCharacter = novelResponse.slides.filter(slide => slide.type === SlideInterfaceTypes.single) as SingleCharacterSlide[];
+        //const slideWithCharacter = novelResponse.slides.filter(slide => slide.type === SlideInterfaceTypes.single) as SingleCharacterSlide[];
+
+        // get unique characters
+        const uniqueCharacters = getUniqueCharacters(novelResponse.slides);
 
         // get character assets
         let characterResponse: CharacterInterface[] = [];
-        for (const slide of slideWithCharacter) characterResponse.push(await getCharacterData(slide.character.id));
+        for (const ch of uniqueCharacters) characterResponse.push(await getCharacterData(ch.id));
 
         // unique assets
         const uniqueBackgroundSources = getUniqueBackgrounds(novelResponse.slides);
-        const uniqueCharacters = getUniqueCharacters(novelResponse.slides);
         const uniqueCharacterMoodSources = getUniqueCharacterMoodSources(characterResponse[0]?.files, uniqueCharacters) ?? [];
 
         // preload the assets
@@ -202,6 +203,7 @@ export default function VisualNovel() {
                     isInitialMount.current = false;
                 }
             } catch (e) {
+                console.log(e)
                 reloadNovelWeb();
             }
         }

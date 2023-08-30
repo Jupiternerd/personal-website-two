@@ -21,7 +21,7 @@ const TextBox: React.FC<TextboxProps> = ({ name, text }) => {
 
             const timeoutId = setTimeout(() => {
                 setCurrentText(text.slice(0, currentText.length + 1)); // Add the next character to `currentText`
-            }, 60);
+            }, 30);
 
             return () => clearTimeout(timeoutId);
         }
@@ -31,7 +31,7 @@ const TextBox: React.FC<TextboxProps> = ({ name, text }) => {
     useEffect(() => {
         const intervalId = setInterval(() => {
             setCursorVisible(v => !v);
-        }, 400);
+        }, 230);
 
         return () => clearInterval(intervalId);
     }, []);

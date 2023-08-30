@@ -20,11 +20,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     }
     catch (err) {
+        console.error(err)
         return res.status(500).send(err.message);
     }
     try {
         let novel = await AssetPipeline.getAssets(AssetEnums.novel, parseInt(id as string)) as NovelInterface;
-
         if (!novel) {
             return res.status(404).send('Novel not found for id: ' + parseInt(id as string));
         }
@@ -38,6 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         res.status(200).json(novel);
     } catch (err) {
+        console.error(err)
         res.status(500).send(err.message);
     }
 }
