@@ -2,13 +2,19 @@ import { MoodsEnum } from "./character";
 import { MotionEffectsEnum } from "./visualEffects";
 
 export type VNNavigationScripts = "next" | "back" | number | `novel:${number}`;
+
+export enum VNChecksTypes {
+    "inc_all","inc","exc"
+}
+export interface VNChecks {
+    values: { [key: string]: any },
+    type: VNChecksTypes
+}
+
 export interface VNNavigationInterface {
     text: string;
     script: VNNavigationScripts;
-    checks?: {
-        values: {[key: string]: any},
-        type: "inc_all" | "inc" | "exc"
-    },
+    checks?: VNChecks;
     setPersistant?: {[key: string]: any}
 }
 
@@ -55,7 +61,7 @@ export type SlideInterfaces = SingleCharacterSlide | BgSlideInterface;
 export interface NovelInterface {
     _id: number,
     slides: SlideInterfaces[],
-    checks?: {[key: string]: string} 
+    checks?: VNChecks
 }
 
 const defaultNovel: NovelInterface = {
@@ -70,7 +76,9 @@ const defaultNovel: NovelInterface = {
             },
             "choices": [{
                 "text": "Begin",
-                "script": "next"
+                "script": "next",
+                "setPersistant": {
+                }
             }]
          },
         {

@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PersistantUserInterface } from "../../utils/struct/user";
 import { CharacterInterface, MoodsEnum } from "../../utils/struct/character";
-import { NovelInterface, SingleCharacterSlide, SlideInterfaceTypes, SlideInterfaces, VNNavigationScripts } from "../../utils/struct/novel";
+import { NovelInterface, SingleCharacterSlide, SlideInterfaceTypes, SlideInterfaces, VNChecks, VNChecksTypes, VNNavigationScripts } from "../../utils/struct/novel";
 import Scene from "./Scene";
 import TextBox from "./TextBox";
 import Choicebox from "./Choices";
@@ -63,15 +63,12 @@ async function getCharacterData(id: number): Promise<CharacterInterface> {
 }
 
 export function compareChecks(
-    checks: {
-        values: { [key: string]: any };
-        type: "inc_all" | "inc" | "exc";
-    },
+    checks: VNChecks,
     flags: { [key: string]: any }
 ): boolean {
     const { values, type } = checks;
 
-    if (type === "inc_all") {
+    if (type === VNChecksTypes.inc_all) {
         for (const key in values) {
             if (flags[key] !== values[key]) {
                 return false;
@@ -79,7 +76,7 @@ export function compareChecks(
         }
         return true;
     }
-    if (type === "inc") {
+    if (type === VNChecksTypes.inc) {
         for (const key in values) {
             if (flags[key] === values[key]) {
                 return true;
@@ -87,7 +84,7 @@ export function compareChecks(
         }
         return false;
     }
-    if (type === "exc") {
+    if (type === VNChecksTypes.exc) {
         for (const key in values) {
             if (flags[key] === values[key]) {
                 return false;
@@ -262,21 +259,23 @@ export default function VisualNovel() {
         setUserData(user);
     }
 
-    const navigate = (script: VNNavigationScripts, set?: { [key: string]: string }) => {
+    const navigate = (script: VNNavigationScripts, set?: { [key: string]: any }) => {
         if (!user || !xy) return;
 
         if (xy?.x === 0 && xy?.y === 0 && !expandHorizon) {
             setExpandHorizon(true);
         }
+
+        if (set) {
+            for (const [key, value] of Object.entries(set)) {
+                user.flags[key] = value;
+            }
+            setUser(user);
+        }
+
         if (typeof script == 'string' && script.startsWith('novel')) {
             const id = parseInt(script.split(':')[1]);
             if (isNaN(id)) return;
-            if (set) {
-                for (const [key, value] of Object.entries(set)) {
-                    user.flags[key] = value;
-                }
-                setUser(user);
-            }
             loadNovelData(id);
             setAndStoreUserState(id, 0);
         } else {
@@ -329,6 +328,7 @@ export default function VisualNovel() {
                             <Choicebox
                                 text={choice.text}
                                 script={choice.script}
+                                setPersistant={choice.setPersistant}
                                 invoker={navigate}
                             />
                         </div>
