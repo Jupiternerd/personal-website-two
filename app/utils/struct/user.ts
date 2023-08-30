@@ -1,7 +1,7 @@
 // user data will jsut be cookies
 
 export interface PersistantUserInterface {
-    flags: { [key: string]: string },
+    flags: { [key: string]: any },
     blacklisted: boolean
 }
 

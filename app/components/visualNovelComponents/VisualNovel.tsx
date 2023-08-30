@@ -15,6 +15,7 @@ function getUserData(): PersistantUserInterface {
     const defaultUserData: PersistantUserInterface = {
         blacklisted: false,
         flags: {
+            "firstInteract": true
         }
     };
 
@@ -61,11 +62,40 @@ async function getCharacterData(id: number): Promise<CharacterInterface> {
     }).then(res => res.json()) as CharacterInterface;
 }
 
-export function compareChecks(checks: { [key: string]: string }, flags: { [key: string]: string }) {
-    for (const [key, value] of Object.entries(checks)) {
-        if (flags[key] !== value) return false;
+export function compareChecks(
+    checks: {
+        values: { [key: string]: any };
+        type: "inc_all" | "inc" | "exc";
+    },
+    flags: { [key: string]: any }
+): boolean {
+    const { values, type } = checks;
+
+    if (type === "inc_all") {
+        for (const key in values) {
+            if (flags[key] !== values[key]) {
+                return false;
+            }
+        }
+        return true;
     }
-    return true;
+    if (type === "inc") {
+        for (const key in values) {
+            if (flags[key] === values[key]) {
+                return true;
+            }
+        }
+        return false;
+    }
+    if (type === "exc") {
+        for (const key in values) {
+            if (flags[key] === values[key]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
 }
 
 function reloadNovelWeb() {

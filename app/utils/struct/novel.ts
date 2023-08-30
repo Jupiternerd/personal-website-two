@@ -5,8 +5,11 @@ export type VNNavigationScripts = "next" | "back" | number | `novel:${number}`;
 export interface VNNavigationInterface {
     text: string;
     script: VNNavigationScripts;
-    checks?: {[key: string]: string},
-    setPersistant?: {[key: string]: string}
+    checks?: {
+        values: {[key: string]: any},
+        type: "inc_all" | "inc" | "exc"
+    },
+    setPersistant?: {[key: string]: any}
 }
 
 export interface EffectsInterface {
