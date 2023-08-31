@@ -173,13 +173,14 @@ export default function VisualNovel() {
         let characterResponse: CharacterInterface[] = [];
         for (const ch of uniqueCharacters) characterResponse.push(await getCharacterData(ch.id));
 
+        /*
         // unique assets
         const uniqueBackgroundSources = getUniqueBackgrounds(novelResponse.slides);
         const uniqueCharacterMoodSources = getUniqueCharacterMoodSources(characterResponse[0]?.files, uniqueCharacters) ?? [];
 
         // preload the assets
         await preLoadNovelAssets([...uniqueBackgroundSources, ...uniqueCharacterMoodSources]);
-        
+        */
         // set the preloaded data
         setPreloadedData({ characters: characterResponse, novel: novelResponse });
     }
