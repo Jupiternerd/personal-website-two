@@ -3,18 +3,16 @@ import Footer from "./footer";
 import NavMenu from "./components/NavMenu";
 import './global.css'
 import dynamic from 'next/dynamic';
-import AudioEngine from "./components/AudioEngine";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata = {
-    title: 'Shokkunn Website',
-    description: 'Yea Yea',
+    title: 'Wai / Shokkunn Website',
+    description: '[-w-]',
 }
 
 const DynamicCursor = dynamic(() => import('./components/DynamicCursor'), {
-    ssr: false // This will load the component client-side only
+    ssr: false
 });
-
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -24,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <NavMenu />
                 {children}
                 <Footer />
+                <SpeedInsights />
             </body>
         </html>
     )
