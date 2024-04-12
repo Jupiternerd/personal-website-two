@@ -136,6 +136,15 @@ a:hover::after {
     }
 }
 
+/* Medium screen sizes */
+@media (min-width: 769px) and (max-width: 1023px) {
+    .scene {
+        width: 80vw; /* Example width, adjust as needed */
+        height: 60vh; /* Example height, adjust as needed */
+    }
+}
+
+
 /* Smaller screen sizes */
 @media (max-width: 768px) {
     .scene {

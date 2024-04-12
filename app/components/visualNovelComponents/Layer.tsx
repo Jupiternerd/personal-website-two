@@ -21,9 +21,9 @@ const Layer: React.FC<LayerProps> = ({ source, type, position, vfx = [], priorit
             style={{ position: 'absolute', width: '100%', height: '100%', ...customStyles }}>
             {
                 type === 'image' ?
-                    <Image alt="layer" src={source as ImageProps["src"]} fill={true} sizes={"50vw"} style={{ objectFit: position }} priority={priority} />
+                    <Image loading="eager" alt="layer" src={source as ImageProps["src"]} fill={true} sizes={"50vw"} style={{ objectFit: position }} priority={priority} />
                     :
-                    <video preload="auto" style={{ width: '100%', height: '100%', objectFit: position }} autoPlay loop muted playsInline>
+                    <video preload="true" style={{ width: '100%', height: '100%', objectFit: position }} autoPlay loop muted playsInline>
                         <source src={source as string} type="video/webm" />
                         Your browser does not support videos.
                     </video>

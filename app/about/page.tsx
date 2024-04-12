@@ -5,10 +5,10 @@ import styles from "../components/visualNovelComponents/ChoiceBox.module.css";
 
 export default function About() {
     return (
-        <div className={NotoFour.className} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-            <div style={{ width: '100%', textAlign: 'center', paddingTop: '30px' }}>
-                <h1 style={{ fontSize: "40px" }}>Wai</h1>
-            </div>
+<div className={NotoFour.className} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+    <div style={{ width: '100%', textAlign: 'center', paddingTop: '30px' }}>
+        <h1 style={{ fontSize: "40px" }}>Wai</h1>
+    </div>
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', maxWidth: '50%', margin: 'auto' }}>
                 <div style={{ flex: 1, padding: '10px', textAlign: "justify" }}>
                     <h2 style={{ fontSize: "25px" }}>About Me</h2>
@@ -52,12 +52,7 @@ export default function About() {
                         It had the same UI but it was a lot more bare bones and was static. This site, however, is dynamic (Novels are stored in MongoDb)
                         and can be used as a blog with the way it is set up. I am pretty proud of it and I hope you enjoy it as well.
                         <br />
-                        (Not built using Renpy or any other visual novel engine, custom made :^D)
-                        <br />
-                        <br />
-                        And yes, there is a story to the visual novel. It&apos;s based on flags like traditional visual novels so choose your words carefully~
-                        <br />
-                        <br />
+                        
                         If you get into a dead end or want to restart, click the button below. (The warning below is that it resets the conversation flow but flags are persistant)<br />
 
                         <button className={`${styles.button} ${styles.fadeIn}`} style={{ marginTop: "30px" }} onClick={deleteUserData}>
