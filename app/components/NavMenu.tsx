@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { NotoFour } from "../utils/FontPresets"
+import AudioEngine from "./AudioEngine";
 
 export default function NavMenu() {
     const Style = { margin: '0 25px' };
@@ -35,7 +36,10 @@ export default function NavMenu() {
                         CONTACT
                     </Link>
                 </li>
+                
             </ul>
+            <AudioEngine src="/music/bgm.mp3" delay={2500} />
+            
         </nav>
     );
 }

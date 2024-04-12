@@ -13,10 +13,6 @@ export default function About() {
                 onClick={() => window.open('mailto:wai_hlaing@shokkunn.art', "_blank")}>
                 Email (does not check often)
             </button>
-            <button className={`${styles.button} ${styles.fadeIn}`} style={{ marginTop: "30px" }}
-                onClick={() => window.open('https://discord.gg/6Eq2EU5MCW', "_blank")}>
-                Discord (server)
-            </button>
         </div>
     )
 }

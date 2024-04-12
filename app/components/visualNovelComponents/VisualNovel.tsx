@@ -149,6 +149,7 @@ export default function VisualNovel() {
     const isInitialMount = useRef(true);
     const [expandHorizon, setExpandHorizon] = useState(false);
 
+    /** deprecated
     async function preLoadNovelAssets(assets: {source: string, type: "image" | "video"}[]) {
         // preload the backgrounds
         for (const asset of assets) {
@@ -161,6 +162,7 @@ export default function VisualNovel() {
             }
         }
     }
+    */
 
     async function loadNovelData(novelId: number = xy?.x ?? 0) {
         const novelResponse = await getNovelData(novelId);
@@ -338,7 +340,7 @@ export default function VisualNovel() {
                     );
                 })}
             </div>
-            {expandHorizon && <AudioEngine src="/music/bgm.mp3" delay={300} />} 
+            {expandHorizon /*&& <AudioEngine src="/music/bgm.mp3" delay={300} />*/} 
         </div>
     )
 }

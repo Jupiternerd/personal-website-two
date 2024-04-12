@@ -10,7 +10,10 @@ export default function About() {
                 <h1 style={{ fontSize: "40px" }}>Projects</h1>
             </div>
             <p>
-                Currently under construction. Please check back later.
+            <button className={`${styles.button} ${styles.fadeIn}`} style={{ marginTop: "30px" }} 
+                onClick={() => window.open('https://heaven.shokkunn.art', "_blank")}>
+                Old Internet Explorer
+            </button>
             </p>
         </div>
     )
