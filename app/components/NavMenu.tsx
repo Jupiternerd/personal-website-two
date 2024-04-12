@@ -39,7 +39,7 @@ export default function NavMenu() {
                 </li>
                 
             </ul>
-            <AudioEngine src="/music/bgm.mp3" delay={2500} />
+            <AudioEngine src="/music/bgm.mp3" delay={1200} />
             
         </nav>
     );

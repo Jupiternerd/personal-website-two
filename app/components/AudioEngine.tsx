@@ -57,6 +57,25 @@ export default function AudioEngine({ src, delay = 0 }) {
         }, 50);
     };
 
+    const handleGlobalButtonClick = () => {
+        // When a button is clicked, check if initial play is true
+        if (initialPlay && audioRef.current) {
+            audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+            setIsPlaying(true);
+            setInitialPlay(false); // Set initialPlay to false to prevent repeated triggers
+        }
+    };
+
+    useEffect(() => {
+        // Add event listener to all button clicks
+        document.addEventListener('click', handleGlobalButtonClick);
+
+        return () => {
+            // Clean up the event listener
+            document.removeEventListener('click', handleGlobalButtonClick);
+        };
+    }, [initialPlay]);
+
     const togglePlay = () => {
         setIsPlaying(prev => !prev);
     };
@@ -93,7 +112,7 @@ export default function AudioEngine({ src, delay = 0 }) {
 
 
     return (
-        <div key="audio" style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div key="audio" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <button className={`${NotoFour.className} ${styles.button} ${styles.fadeIn}`} onClick={togglePlay}>
                 Music {isPlaying ? ' (on) | off ' : ' on | (off) '}
             </button>
