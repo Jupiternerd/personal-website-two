@@ -24,7 +24,7 @@ function usePageVisibility() {
 
 
 export default function AudioEngine({ src, delay = 0 }) {
-    const [isPlaying, setIsPlaying] = useState(true);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [delayedDone, setDelayedDone] = useState(false);
     const [initialPlay, setInitialPlay] = useState(false);
     const isVisible = usePageVisibility();
