@@ -6,7 +6,8 @@ export default function NavMenu() {
     const Style = { margin: '0 25px' };
 
     return (
-        <nav className="fade-in">
+        <nav className="fade-in" style={{               justifyContent: 'center',
+        alignItems: 'center',}}>
             <ul className={NotoFour.className} style={{
                 display: 'flex',
                 justifyContent: 'center',

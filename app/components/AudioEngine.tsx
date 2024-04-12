@@ -93,7 +93,7 @@ export default function AudioEngine({ src, delay = 0 }) {
 
 
     return (
-        <div key="audio" style={{ position: 'relative', right: '10px', bottom: '10px', marginTop: "20px", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div key="audio" style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <button className={`${NotoFour.className} ${styles.button} ${styles.fadeIn}`} onClick={togglePlay}>
                 Music {isPlaying ? ' (on) | off ' : ' on | (off) '}
             </button>
