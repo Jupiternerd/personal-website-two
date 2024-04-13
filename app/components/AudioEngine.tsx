@@ -68,6 +68,7 @@ export default function AudioEngine({ src, delay = 0 }) {
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = 0.04;
+<<<<<<< Updated upstream
             adjustVolumeGradually(isVisible ? 0.04 : 0.008);
         }
     }, [isVisible]);
@@ -78,6 +79,21 @@ export default function AudioEngine({ src, delay = 0 }) {
                 setIsPlaying(true);
             }
         };
+=======
+            if (isPlaying && !isVisible) {
+                adjustVolumeGradually(0.008); // Lowered volume
+            } else {
+                adjustVolumeGradually(0.04); // Normal volume
+            }
+            if (isPlaying) {
+                audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+            } else {
+                audioRef.current.pause();
+            }
+        }
+        
+    }, [isPlaying, isVisible]);
+>>>>>>> Stashed changes
 
         const timeoutId = setTimeout(handleInitialPlay, delay);
         return () => clearTimeout(timeoutId);

@@ -18,8 +18,6 @@ export default function About() {
                         Currently I am experimenting with creative writing, visual novels and Stable Diffusion.
                         <br /><br />
                         I am studying to be a UI/UX engineer in the future so I can create fun experiences like this. Please contact me to let me know what you think!<br /> 
-                        <br />
-                        If you want to get to know me, you can play the visual novel on the home page (full of secrets) or contact me (contacts)!
                         <br/>
                         <br/>
                         School: CUNY Hunter College<br />
