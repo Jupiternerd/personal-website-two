@@ -1,7 +1,8 @@
 "use client";
+
 import { useEffect, useRef, useState } from 'react';
 import { NotoFour } from '../utils/FontPresets';
-import styles from "./visualNovelComponents/ChoiceBox.module.css";
+import styles from "./visualNovelComponents/ChoiceBox.module.css"
 
 function usePageVisibility() {
     const [isVisible, setIsVisible] = useState(true);
@@ -21,65 +22,80 @@ function usePageVisibility() {
     return isVisible;
 }
 
-export default function AudioEngine({ src, delay = 0 }) {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const isVisible = usePageVisibility();
-    const audioRef = useRef(null);
-    const volumeIntervalRef = useRef(null);
 
-    const adjustVolumeGradually = (targetVolume) => {
+export default function AudioEngine({ src, delay = 0 }) {
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [delayedDone, setDelayedDone] = useState(false);
+    const [initialPlay, setInitialPlay] = useState(false);
+    const isVisible = usePageVisibility();
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const volumeIntervalRef = useRef<number | null>(null); // Store the interval ID
+
+
+    const adjustVolumeGradually = (targetVolume: number) => {
         if (!audioRef.current) return;
 
         if (volumeIntervalRef.current) {
             clearInterval(volumeIntervalRef.current); // Clear any existing interval
         }
 
-        const volumeStep = targetVolume > audioRef.current.volume ? 0.002 : -0.004;
-        volumeIntervalRef.current = setInterval(() => {
+        let volumeStep = targetVolume > audioRef.current.volume ? 0.002 : -0.004;
+        volumeIntervalRef.current = window.setInterval(() => {
             if (!audioRef.current) return;
 
-            if ((volumeStep > 0 && audioRef.current.volume >= targetVolume) ||
-                (volumeStep < 0 && audioRef.current.volume <= targetVolume)) {
+            if (volumeStep > 0 && audioRef.current.volume >= targetVolume) {
                 audioRef.current.volume = targetVolume;
-                clearInterval(volumeIntervalRef.current);
+                if (volumeIntervalRef.current)
+                clearInterval(volumeIntervalRef?.current);
+            } else if (volumeStep < 0 && audioRef.current.volume <= targetVolume) {
+                audioRef.current.volume = targetVolume;
+                if (volumeIntervalRef.current)
+                clearInterval(volumeIntervalRef?.current);
             } else {
                 audioRef.current.volume += volumeStep;
             }
         }, 50);
     };
 
+    const handleGlobalButtonClick = () => {
+        // When a button is clicked, check if initial play is true
+        if (initialPlay && audioRef.current) {
+            audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+            setIsPlaying(true);
+            setInitialPlay(false); // Set initialPlay to false to prevent repeated triggers
+        }
+    };
+
+    useEffect(() => {
+        // Add event listener to all button clicks
+        document.addEventListener('click', handleGlobalButtonClick);
+
+        return () => {
+            // Clean up the event listener
+            document.removeEventListener('click', handleGlobalButtonClick);
+        };
+    }, [initialPlay]);
+
     const togglePlay = () => {
         setIsPlaying(!isPlaying);
     };
 
     useEffect(() => {
-        if (audioRef.current) {
-            if (isPlaying) {
-                const playPromise = audioRef.current.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(_ => {}).catch(error => console.error("Audio play failed:", error));
+        if (!initialPlay && !delayedDone) {
+            const timeoutId = setTimeout(() => {
+                if (audioRef.current) {
+                    audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+                    setDelayedDone(true);
+                    setInitialPlay(true);
                 }
-            } else {
-                audioRef.current.pause();
-            }
+            }, delay);
+            return () => clearTimeout(timeoutId);
         }
-    }, [isPlaying]);
+    }, [delayedDone, initialPlay]);
 
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.volume = 0.04;
-<<<<<<< Updated upstream
-            adjustVolumeGradually(isVisible ? 0.04 : 0.008);
-        }
-    }, [isVisible]);
-
-    useEffect(() => {
-        const handleInitialPlay = () => {
-            if (audioRef.current && !isPlaying) {
-                setIsPlaying(true);
-            }
-        };
-=======
             if (isPlaying && !isVisible) {
                 adjustVolumeGradually(0.008); // Lowered volume
             } else {
@@ -93,11 +109,7 @@ export default function AudioEngine({ src, delay = 0 }) {
         }
         
     }, [isPlaying, isVisible]);
->>>>>>> Stashed changes
 
-        const timeoutId = setTimeout(handleInitialPlay, delay);
-        return () => clearTimeout(timeoutId);
-    }, [delay]);
 
     return (
         <div key="audio" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
